@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Campus · Universidad Idle</title>
+<meta name="description" content="Construí tu universidad pixelada, llenala de alumnos y convertila en la mejor. Juego idle gratis para Android.">
+<meta property="og:title" content="Pixel Campus · Universidad Idle">
+<meta property="og:description" content="Construí tu universidad pixelada, llenala de alumnos y convertila en la mejor.">
+<meta property="og:image" content="https://gasparin52.github.io/img/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<style>
+  @font-face { font-family: "CutePixel"; src: url("CutePixel.ttf") format("truetype"); font-display: swap; }
+  :root {
+    --bg: #fbf3e2; --bg-alt: #f3e6c9; --card: #fffaf0; --ink: #2b2018; --muted: #6b5a49;
+    --accent: #f9c83c; --accent-ink: #3a2a10; --brick: #c8553d; --green: #4f9d3a; --line: #e2cfa8;
+    --dark: #34241a; --dark-ink: #fff4d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1d1712; --bg-alt: #261d16; --card: #2c2219; --ink: #f3e8d4; --muted: #bba88f; --line: #44352a; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55;
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  img { image-rendering: pixelated; }
+  .pixel { font-family: "CutePixel", system-ui, sans-serif; letter-spacing: 0.5px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  /* Idioma: se muestra solo el bloque del idioma activo */
+  html[lang="es"] [lang="en"]:not(html), html[lang="en"] [lang="es"]:not(html) { display: none !important; }
+
+  header.top { position: sticky; top: 0; z-index: 5; background: var(--dark); color: var(--dark-ink); }
+  header.top .wrap { display: flex; align-items: center; gap: 10px; height: 56px; }
+  header.top img { width: 32px; height: 32px; }
+  header.top .name { font-size: 28px; margin-right: auto; }
+  .lang { display: flex; border: 2px solid var(--accent); }
+  .lang button { background: transparent; color: var(--dark-ink); border: 0; padding: 4px 10px; cursor: pointer;
+                 font: 20px "CutePixel", sans-serif; }
+  .lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+  .hero { background: linear-gradient(#34241a, #18120e); color: var(--dark-ink); padding: 48px 0 56px; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: center; }
+  .hero h1 { font-size: clamp(56px, 11vw, 96px); line-height: 0.9; margin: 0 0 8px; color: var(--accent);
+             text-shadow: 4px 4px 0 #000; font-weight: normal; }
+  .hero .sub { font-size: clamp(28px, 5vw, 40px); margin: 0 0 16px; }
+  .hero p.lead { font-size: 1.1rem; max-width: 34em; opacity: 0.9; margin: 0 0 24px; }
+  .hero .phone { justify-self: center; width: min(300px, 70vw); border: 6px solid var(--accent);
+                 box-shadow: 10px 10px 0 #000; image-rendering: auto; }
+  .cta { display: inline-flex; align-items: center; gap: 12px; background: var(--green); color: #fff;
+         text-decoration: none; padding: 12px 22px; border: 3px solid #000; box-shadow: 5px 5px 0 #000;
+         font: 30px "CutePixel", sans-serif; transition: transform 0.1s, box-shadow 0.1s; }
+  .cta:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 #000; }
+  .cta svg { width: 26px; height: 26px; }
+  .cta small { display: block; font-size: 18px; opacity: 0.85; line-height: 1; }
+  .note { margin-top: 14px; font-size: 0.9rem; opacity: 0.7; }
+
+  section { padding: 56px 0; }
+  section.alt { background: var(--bg-alt); }
+  h2 { font: normal clamp(36px, 7vw, 52px)/1 "CutePixel", sans-serif; margin: 0 0 28px; text-align: center; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .feature { background: var(--card); border: 3px solid var(--line); padding: 18px; }
+  .feature .emoji { font-size: 30px; }
+  .feature h3 { font: normal 28px/1.1 "CutePixel", sans-serif; margin: 6px 0; color: var(--brick); }
+  .feature p { margin: 0; color: var(--muted); }
+
+  .gallery { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 4px 16px; }
+  .gallery img { flex: 0 0 auto; width: 240px; height: auto; scroll-snap-align: center; border: 4px solid var(--accent);
+                 image-rendering: auto; }
+
+  .faq { max-width: 720px; margin: 0 auto; }
+  details { background: var(--card); border: 3px solid var(--line); padding: 12px 16px; margin-bottom: 10px; }
+  summary { cursor: pointer; font: 24px "CutePixel", sans-serif; }
+  details p { margin: 8px 0 0; color: var(--muted); }
+
+  footer { background: var(--dark); color: var(--dark-ink); padding: 28px 0; font-size: 0.95rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+  footer a { color: var(--accent); }
+  footer .brand { font-size: 26px; }
+
+  @media (max-width: 760px) {
+    .hero .wrap { grid-template-columns: 1fr; text-align: center; }
+    .hero p.lead { margin-left: auto; margin-right: auto; }
+    .features { grid-template-columns: 1fr; }
+    .gallery img { width: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <img src="img/icon.png" alt="">
+    <span class="name pixel">Pixel Campus</span>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang="es" aria-pressed="true">ES</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1 class="pixel">Pixel Campus</h1>
+      <p class="sub pixel"><span lang="es">Tu universidad idle</span><span lang="en">Your idle university</span></p>
+      <p class="lead">
+        <span lang="es">Empezás con un edificio vacío y un sueño: armar la mejor universidad del ranking. Abrí aulas, inscribí alumnos, festejá sus graduaciones y mirá cómo tu campus crece, incluso cuando no estás jugando.</span>
+        <span lang="en">You start with an empty building and a dream: running the top university in the ranking. Open classrooms, enroll students, celebrate their graduation and watch your campus grow, even while you're away.</span>
+      </p>
+      <a class="cta" href="https://play.google.com/store/apps/details?id=com.gasparin52.universidadidle">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.5v19l10.5-9.5L4 2.5zm12 8 3-1.7c1.3.8 1.3 1.6 0 2.4l-3 1.7-2-1.9 2-0.5z"/></svg>
+        <span><small lang="es">Gratis en</small><small lang="en">Free on</small>Google Play</span>
+      </a>
+      <p class="note"><span lang="es">Para Android · Sin conexión · Compras opcionales</span><span lang="en">For Android · Plays offline · Optional purchases</span></p>
+    </div>
+    <img class="phone" data-shot="01_general" src="img/01_general_es.webp" width="540" height="960" alt="">
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2><span lang="es">¿Qué hacés en Pixel Campus?</span><span lang="en">What do you do in Pixel Campus?</span></h2>
+    <div class="features">
+      <div class="feature"><div class="emoji">🏫</div>
+        <h3><span lang="es">Construí tu campus</span><span lang="en">Build your campus</span></h3>
+        <p><span lang="es">Aulas, oficinas, comedor, biblioteca, kiosco y salas especiales en cada piso. Cada piso tiene su propia facultad.</span><span lang="en">Classrooms, offices, cafeteria, library, kiosk and special rooms on every floor. Each floor has its own faculty.</span></p></div>
+      <div class="feature"><div class="emoji">🎓</div>
+        <h3><span lang="es">Alumnos y graduaciones</span><span lang="en">Students and graduations</span></h3>
+        <p><span lang="es">Inscribí alumnos en tres turnos, contratá profesores, mejorá el mobiliario y festejá cada graduación.</span><span lang="en">Enroll students in three shifts, hire teachers, upgrade the furniture and celebrate every graduation.</span></p></div>
+      <div class="feature"><div class="emoji">💰</div>
+        <h3><span lang="es">Un idle que rinde</span><span lang="en">An idle game that pays off</span></h3>
+        <p><span lang="es">Cobrá los billetes de cada turno, invertí en mejoras y contratá personal para automatizar el campus.</span><span lang="en">Collect the bills every shift, invest in upgrades and hire staff to automate your campus.</span></p></div>
+      <div class="feature"><div class="emoji">🧹</div>
+        <h3><span lang="es">El día a día</span><span lang="en">Campus life</span></h3>
+        <p><span lang="es">Limpiá la basura, destapá los baños y atendé el call center antes de que los alumnos se quejen.</span><span lang="en">Pick up litter, unclog bathrooms and answer the call center before students complain.</span></p></div>
+      <div class="feature"><div class="emoji">🏆</div>
+        <h3><span lang="es">Subí en el ranking</span><span lang="en">Climb the ranking</span></h3>
+        <p><span lang="es">Competí contra Harvbit, Pixford y Stanbyte, cumplí misiones diarias y desbloqueá logros.</span><span lang="en">Compete against Harvbit, Pixford and Stanbyte, complete daily missions and unlock achievements.</span></p></div>
+      <div class="feature"><div class="emoji">🐱</div>
+        <h3><span lang="es">Y además… gatos</span><span lang="en">And… cats</span></h3>
+        <p><span lang="es">Adoptá gatos que pasean por tu campus. Toda universidad necesita una mascota.</span><span lang="en">Adopt cats that roam your campus. Every university needs a mascot.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2><span lang="es">Capturas</span><span lang="en">Screenshots</span></h2>
+    <div class="gallery">
+      <img data-shot="01_general" src="img/01_general_es.webp" width="540" height="960" alt="" loading="lazy">
+      <img data-shot="02_aulas" src="img/02_aulas_es.webp" width="540" height="960" alt="" loading="lazy">
+      <img data-shot="03_alumnos_recibidos" src="img/03_alumnos_recibidos_es.webp" width="540" height="960" alt="" loading="lazy">
+      <img data-shot="04_ranking" src="img/04_ranking_es.webp" width="540" height="960" alt="" loading="lazy">
+      <img data-shot="05_tienda_gatos" src="img/05_tienda_gatos_es.webp" width="540" height="960" alt="" loading="lazy">
+      <img data-shot="06_recompensa" src="img/06_recompensa_es.webp" width="540" height="960" alt="" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap faq">
+    <h2><span lang="es">Preguntas frecuentes</span><span lang="en">FAQ</span></h2>
+    <details><summary><span lang="es">¿Es gratis?</span><span lang="en">Is it free?</span></summary>
+      <p><span lang="es">Sí. Tiene compras opcionales y anuncios con recompensa que solo ves si elegís verlos.</span><span lang="en">Yes. It has optional purchases and rewarded ads that you only watch if you choose to.</span></p></details>
+    <details><summary><span lang="es">¿Necesito internet?</span><span lang="en">Do I need internet?</span></summary>
+      <p><span lang="es">No para jugar: tu campus avanza aunque estés sin conexión. Internet se usa para los anuncios, las compras y la copia en la nube.</span><span lang="en">Not to play: your campus keeps progressing offline. Internet is used for ads, purchases and the cloud save.</span></p></details>
+    <details><summary><span lang="es">¿Puedo pasar mi partida a otro teléfono?</span><span lang="en">Can I move my save to another phone?</span></summary>
+      <p><span lang="es">Sí, conectando tu cuenta de Google Play Juegos se guarda una copia en la nube.</span><span lang="en">Yes, connecting your Google Play Games account keeps a copy in the cloud.</span></p></details>
+    <details><summary><span lang="es">¿Está en iPhone?</span><span lang="en">Is it on iPhone?</span></summary>
+      <p><span lang="es">Por ahora solo en Android.</span><span lang="en">Android only for now.</span></p></details>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="brand pixel">G52 Games</span>
+    <span>
+      <a href="https://gasparin52.github.io/pixel-campus-privacidad/"><span lang="es">Política de privacidad</span><span lang="en">Privacy policy</span></a>
+      · <a href="mailto:g52gamedev@gmail.com">g52gamedev@gmail.com</a>
+    </span>
+    <span>© 2026 G52 Games</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll(".lang button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
+      });
+      document.querySelectorAll("img[data-shot]").forEach(function (img) {
+        img.src = "img/" + img.dataset.shot + "_" + lang + ".webp";
+      });
+      try { localStorage.setItem("lang", lang); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem("lang"); } catch (e) {}
+    var initial = saved || ((navigator.language || "es").toLowerCase().indexOf("es") === 0 ? "es" : "en");
+    setLang(initial);
+    document.querySelectorAll(".lang button").forEach(function (b) {
+      b.addEventListener("click", function () { setLang(b.dataset.lang); });
+    });
+  })();
+</script>
+</body>
+</html>
